@@ -1468,7 +1468,8 @@ uint32_t scan_band(FILE* fpout_bs, FILE** fpout_spectrum, const char* fname_spec
 			timedout = event.status & FE_TIMEDOUT;
 
 			done = event.status & FE_TIMEDOUT;	// fake flag indicating that driver algo has finished with complete scan
-			found = event.status & FE_HAS_LOCK; // flag indicating driver has found something
+			// DONE deliberately includes FE_HAS_LOCK; it is not a transponder result.
+			found = (event.status & FE_HAS_LOCK) && !done;
 			if ((found || done) && first) {
 				get_spectrum(fpout_spectrum, fname_spectrum, fefd, pol_is_v, band);
 				first = false;
